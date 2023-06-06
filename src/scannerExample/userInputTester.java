@@ -1,0 +1,19 @@
+package scannerExample;
+
+import java.util.Scanner;
+
+public class userInputTester {
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("Enter a String:");
+            String userInput = scanner.nextLine();
+            System.out.println("User Input: " + userInput);
+        }catch(Exception ex){
+            ex.getLocalizedMessage();
+        }finally {
+            scanner.close();
+        }
+    }
+}
