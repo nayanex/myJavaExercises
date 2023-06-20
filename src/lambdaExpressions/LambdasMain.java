@@ -20,10 +20,21 @@ public class LambdasMain {
 
         List<String> input = List.of("hello", "\t   ", "world", "", "\t", " ", "goodbye", "  ");
 
+        // Anonymous class example - which can be completely replaced by a lambda
+        long numberOfWhitespaceStrings1 =
+                countMatchingStrings(input, new Predicate<String>() {
+                    @Override
+                    public boolean test(String s) {
+                        return s.trim().isEmpty();
+                    }
+                });
+
+        // Lambda Expression example
         long numberOfWhitespaceStrings =
                 countMatchingStrings(input, s -> s.trim().isEmpty());
 
         System.out.println(numberOfWhitespaceStrings + " whitespace strings");
+        System.out.println(numberOfWhitespaceStrings1 + " whitespace strings");
 
         BinaryOperator<Integer> add =
                 (Integer a, Integer b) -> { return a + b; };
