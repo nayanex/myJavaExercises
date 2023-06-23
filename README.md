@@ -51,7 +51,7 @@ An **effectively final** variable is a variable whose value does not change afte
 
 Example:
 
-```
+```java
 Map<Year, Integer> getClassSizes(List<Student> students) {
     final Map<Year, Integer> classSizes = new HashMap<>();
     students.stream().forEach(s ->
@@ -68,7 +68,7 @@ In the example, the `classSizes` variable is effectively final because the value
 
 In the example below, the lambda captures the variable `i`, but it is not effectivelly final.
 
-```
+```java
 List<Runnable> runnables = new ArrayList<>(10);
 for (int i = 0; i < 10; i++) {
   runnables.add(() -> System.out.println(i));
@@ -79,7 +79,7 @@ Even though the value of `i` does not change _inside_ the lambda, the value chan
 
 One way to get around this would be to use an **IntStream**:
 
-```
+```java
 List<Runnable> runnables = IntStream.range(1, 10).map(i -> () -> System.out.println(i)).collect(Collectors.toList());
 ```
 
