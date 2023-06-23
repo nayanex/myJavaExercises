@@ -8,20 +8,15 @@ public final class Calculate {
         }
 
         Calculator calculator = new Calculator();
-        // TODO: Register the four "basic" binary operators: +, -, *, /
         calculator.registerOperation("+", (a, b) -> a + b);
-
         calculator.registerOperation("-", (a, b) -> a - b);
-
-        calculator.registerOperation("*", (a, b) -> a * b);
-
         calculator.registerOperation("/", (a, b) -> a / b);
+        calculator.registerOperation("*", (a, b) -> a*  b);
 
         int a = Integer.parseInt(args[0]);
-        char operator = Char.parse args[1];
+        String operator = args[1];
         int b = Integer.parseInt(args[2]);
 
         System.out.println(calculator.calculate(a, operator, b));
     }
 }
-

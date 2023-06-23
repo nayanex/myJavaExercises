@@ -33,4 +33,54 @@ That's why if you intend for an interface to be functional, you should always ad
 When you're designing a Java interface, you should consider making it a functional interface if it describes a single operation.
 
 
+### Package Structure of a Java Project
+
+Verify that you are running the Java class from the correct directory. When executing the Java program, you need to be in the directory that contains the root package folder. For instance, if your class is in the **lambdaExpressions** package, navigate to the parent directory containing the **lambdaExpressions** folder and run the program from there.
+
+```
+cd ..myJavaExercises/out/production/myJavaExercises
+javac *.java
+java lambdaExpressions/Calculate 5 + 4 
+```
+
+## Edge Case: Capturing Variables
+
+Lambdas can **capture** variables from the surrounding code. If a lambda uses any variables from the surrounding code, those variables become **captured variables**. Variables can only be captured if they are **effectively final**.
+
+An **effectively final** variable is a variable whose value does not change after it is initialized.
+
+Example:
+
+```
+Map<Year, Integer> getClassSizes(List<Student> students) {
+    final Map<Year, Integer> classSizes = new HashMap<>();
+    students.stream().forEach(s ->
+        classSizes.compute(
+            s.getGraduationYear(),
+            (k, v) -> (v == null) ? 1 : 1 + v));
+    return classSizes;
+}
+```
+
+A good test to figure out if a variable is effectively final is to add the `final keyword to it. If the code still compiles, that variable is effectively final!
+
+In the example, the `classSizes` variable is effectively final because the value of the variable itself does not change after it's initialized. Remember that in Java, objects are passed by reference. Even though the `HashMap` changes, the variable's value is the `HashMap`'s location in memory, and that location never changes.
+
+In the example below, the lambda captures the variable `i`, but it is not effectivelly final.
+
+```
+List<Runnable> runnables = new ArrayList<>(10);
+for (int i = 0; i < 10; i++) {
+  runnables.add(() -> System.out.println(i));
+}
+```
+
+Even though the value of `i` does not change _inside_ the lambda, the value changes (`i++`) each time the loop iterates.
+
+One way to get around this would be to use an **IntStream**:
+
+```
+List<Runnable> runnables = IntStream.range(1, 10).map(i -> () -> System.out.println(i)).collect(Collectors.toList());
+```
+
 
