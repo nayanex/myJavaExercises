@@ -1,4 +1,4 @@
-package lambdaExpressions;
+package methodReference;
 
 import java.util.function.Function;
 

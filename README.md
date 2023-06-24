@@ -27,7 +27,7 @@ The `@FunctionalInterface` annotation at the top serves two important purposes:
 
 * If that annotation is added to any interface that is not a valid functional interface, the Java compiler will report a compilation error.
 * It tells whoever is reading the code that this is interface is designed to be used with lambdas.
-* 
+
 That's why if you intend for an interface to be functional, you should always add the `@FunctionalInterface` annotation.
 
 When you're designing a Java interface, you should consider making it a functional interface if it describes a single operation.
