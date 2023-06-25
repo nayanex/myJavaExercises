@@ -83,4 +83,50 @@ One way to get around this would be to use an **IntStream**:
 List<Runnable> runnables = IntStream.range(1, 10).map(i -> () -> System.out.println(i)).collect(Collectors.toList());
 ```
 
+## The Stream API
 
+### What is a Stream?
+
+A **stream** is a sequence of elements.
+
+Streams are useful because they allow us to process collection, one element at a time. They can process elements in many ways, such as (but not limited to) filtering or transforming elements, sorting elements, or computing statistics such as the sum or average.
+
+### Stream Pipelines
+
+A stream pipeline consists of creating a stream, calling intermediate operations on the stream, and then terminating the stream using a terminal operation.
+
+* Streams are _single-use_. Once you do an operation on a `Stream`, you cannot to any more operations on that same stream. This means intermediate operations always return a brand new `Stream`, never the original.
+
+* Streams are _lazily evaluated_. No computation happens until the very end, when the terminal operation is called.
+
+Example:
+
+```java
+int getTopScore(List<Student> students) {
+ return students.stream()
+     .filter(Objects::nonNull)
+     .mapToInt(Student::getScore)
+     .max()
+     .orElse(0);
+}
+```
+
+## Stream API: Collectors
+
+The `collect()` method is a terminal operation that aggregates streams of elements. Collectors can be passed to `collect()` to determine what kind of collection is created.
+
+```java
+Set<String> s = stringList.stream().collect(Collectors.toSet());
+```
+
+Here, the collector aggregates the elements into a Set. There are collectors for all the common data structures such as lists, sets, and maps.
+
+Collectors can be used to perform reduction operations such as adding or counting.
+
+```java
+Map<Year, Long> graduatingClassSizes = studentList.stream()
+.collect(Collectors.groupingBy(
+Student::getGraduationYear, Collectors.counting());
+```
+
+Here, `groupingBy()` is used to collect elements into a `Map`. `Collectors.counting()` counts the number of values for each key, so, in this example, it will count how many students there are for each graduation year.
