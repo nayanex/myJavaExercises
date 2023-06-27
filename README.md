@@ -130,3 +130,36 @@ Student::getGraduationYear, Collectors.counting());
 ```
 
 Here, `groupingBy()` is used to collect elements into a `Map`. `Collectors.counting()` counts the number of values for each key, so, in this example, it will count how many students there are for each graduation year.
+
+## Optional Type
+
+* `java.util.Optional` is a container object that may or may not contain a single, non-null value.
+* Optional is an **alternative to using `null`** to represent the absence of a value.
+
+### Optional Type Example
+
+Optional Types are often returned by **terminal operations** on streams.
+
+```java
+int getTopScore(List<Student> students) {
+return students.stream()
+.filter(Objects::nonNull)
+.mapToInt(Student::getScore)
+.max()
+.orElse(0);
+}
+```
+
+Here, the `max()` method actually returns an `OptionalInt`, not an `int`. If the `students` list is empty, the `max()` method will return an empty optional.
+
+If `max()` returns an `OptionalInt` with a value, that value will be used. However, if `max()` returns `OptionalInt.empty()`, the call to `orElse()` makes sure that a default value of `0` will be returned.
+
+This example also shows you how, in addition to `Optional<T>`, Java also has optional types that are specialized for `int`, `long`, and `double` primitives. These classes avoid the need for auto-boxing and auto-unboxing of their values.
+
+### When to Use Optional Types
+
+When you're designing Java APIs, you should consider using `Optional` instead of `null` to represent the absence of values.
+
+`Optional` can have methods invoked on it without throwing `NullPointerException`. The Stream API uses optional types for many of its terminal operations.
+
+However, optionals can sometimes lead to more verbose code by forcing you to call `.get()` whenever you want the value.
