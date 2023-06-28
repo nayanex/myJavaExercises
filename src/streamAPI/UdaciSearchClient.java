@@ -90,7 +90,7 @@ public final class UdaciSearchClient {
     public List<ZoneId> getTimeZones() {
         return timeZones;
     }
-
+    
     public void setTimeZone(List<ZoneId> timeZones) {
         this.timeZones = timeZones;
     }
