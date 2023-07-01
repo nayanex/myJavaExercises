@@ -163,3 +163,82 @@ When you're designing Java APIs, you should consider using `Optional` instead of
 `Optional` can have methods invoked on it without throwing `NullPointerException`. The Stream API uses optional types for many of its terminal operations.
 
 However, optionals can sometimes lead to more verbose code by forcing you to call `.get()` whenever you want the value.
+
+## Input & Output Streams
+
+### InputStream Example
+
+```java
+InputStream in =
+   Files.newInputStream(Path.of("test"), StandardOpenOption.READ);
+byte[] data = new byte[10];
+while (in.read(data) != -1) {  // Returns the number of bytes read
+  useData(data);
+}
+in.close();  // Close the "test" file
+```
+
+This code creates a file called "test" using `newInputStream() method of the Files API. The code calls the `read()` method, which reads the data into a `byte[]` and returns the number of bytes that were read. If no bytes were read, it returns `-1`. This code will read the entire file, 10 bytes at a time, until the loop reaches the end of the file.
+
+### OutputStream Example
+
+```java
+OutputStream out = Files.newOutputStream(Path.of("test"));
+out.write("Hello, world!".getBytes());
+out.close();  // Close the "test" file
+```
+
+### Readers & Writers
+
+#### Reader Example
+
+```java
+char[] data = new char[10];
+Reader reader =
+Files.newBufferedReader(Path.of("test"), StandardCharsets.UTF_8);
+while (reader.read(data) != -1) {
+useData(data);
+}
+reader.close();
+```
+
+Just like input streams, `Readers` are usually created with the Files API. But instead of reading `bytes`, we are reading `chars. There's also a `StandardCharset`, which we'll cover that in more detail in the next video.
+
+#### Writer Example
+
+```java
+Writer writer =
+Files.newBufferedWriter(Path.of("test"),
+StandardCharsets.UTF_8);
+writer.write("hello, world");
+writer.close();  // Close the "test" file
+```
+The `Writer` is pretty much what you would expect. This time we are writing encoded `String`s of data instead of raw `bytes`.
+
+#### BufferedReader Example
+
+```java
+BufferedReader reader =
+Files.newBufferedReader(Path.of("test"), StandardCharsets.UTF_8);
+String line;
+while ((line = reader.readLine()) != null) {
+useString(line);
+}
+reader.close();
+```
+
+#### BufferedWriter Example
+
+```java
+BufferedWriter writer =
+Files.newBufferedWriter(Path.of("test"),
+StandardCharsets.UTF_8);
+writer.write("Hello, ");
+writer.write("world!");
+writer.flush();  // Writes the contents of the buffer
+writer.close();  // Flushes the buffer and closes "test"
+```
+
+`BufferedWriter also uses an in-memory buffer to store writes, and then periodically writes contents of the buffer in batches.
+
+In this code, the `write()` method is called twice, but there is only one actual write to the underlying output stream.
