@@ -31,3 +31,6 @@ bin/
 # Exclude IntelliJ IDEA project files
 *.iml
 .idea/
+
+# java compiled classes
+*.class

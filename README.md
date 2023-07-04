@@ -178,7 +178,7 @@ while (in.read(data) != -1) {  // Returns the number of bytes read
 in.close();  // Close the "test" file
 ```
 
-This code creates a file called "test" using `newInputStream() method of the Files API. The code calls the `read()` method, which reads the data into a `byte[]` and returns the number of bytes that were read. If no bytes were read, it returns `-1`. This code will read the entire file, 10 bytes at a time, until the loop reaches the end of the file.
+This code creates a file called "test" using `newInputStream()` method of the Files API. The code calls the `read()` method, which reads the data into a `byte[]` and returns the number of bytes that were read. If no bytes were read, it returns `-1`. This code will read the entire file, 10 bytes at a time, until the loop reaches the end of the file.
 
 ### OutputStream Example
 
@@ -239,6 +239,66 @@ writer.flush();  // Writes the contents of the buffer
 writer.close();  // Flushes the buffer and closes "test"
 ```
 
-`BufferedWriter also uses an in-memory buffer to store writes, and then periodically writes contents of the buffer in batches.
+BufferedWriter also uses an in-memory buffer to store writes, and then periodically writes contents of the buffer in batches.
 
 In this code, the `write()` method is called twice, but there is only one actual write to the underlying output stream.
+
+
+### `try-catch-finally` Example
+
+try-catch-finally can be very useful for preventing resource leaks.
+
+```java
+Writer writer;
+        try {
+        writer = Files.newBufferedWriter(Path.of("test"));
+        writer.write("Hello, world!");
+        } catch (IOException e) {
+        e.printStackTrace();
+        } finally {
+        if (writer != null) {
+        try {
+        writer.close();
+        } catch (IOException e) {
+        e.printStackTrace();
+        }
+        }
+        }
+```
+The code in the `finally` block is guaranteed to execute after the code in the `try` block, even if the `try` block returns a value or throws an exception. This code also has a `catch` block, but that is optional.
+
+## `try-with-resources` Example
+
+```java
+try (Writer writer = Files.newBufferedWriter(Path.of("test"))) {
+writer.write("Hello, world!");
+} catch (IOException e) {
+e.printStackTrace();
+}
+```
+
+Java 7 introduced the `try-with-resources` syntax. This new syntax allows you to initialize your resources in parenthesis right before the start of the `try` block. Resources initialized in this way are guaranteed to be closed after the `try` block finishes executing.
+
+Although `try-with-resources` has removed the need for the `finally` block in a lot of modern Java code, there are still some use cases where the `finally` block is useful.
+
+By the way, you can initialize multiple resources in the same `try` statement, like this:
+
+```java
+// Copy the contents of "foo" to "bar"
+try (InputStream in   = Files.newInputStream(Path.of("foo"));
+     OutputStream out = Files.newOutputStream(Path.of("bar"))) {
+  out.write(in.readAllBytes());
+}
+```
+
+### `Closeable` and `AutoCloseable`
+
+Only `**Closeable**` or `**AutoCloseable**` objects can be used in the `try` statement.
+
+Most of the I/O classes we've talked about, including `Stream`, `Reader`, `Writer`, `InputStream`, and `OuptutStream`, already implement the `Closeable` interface, whose `close()` method can throw an `IOException`.
+
+AutoCloseable.close() does not throw IOException.
+
+`Closeable` and `AutoCloseable` are just regular Java interfaces, which means you can write your own implmentations and then use them in a `try-with-resources` block!
+
+
