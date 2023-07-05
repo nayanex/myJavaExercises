@@ -293,7 +293,7 @@ try (InputStream in   = Files.newInputStream(Path.of("foo"));
 
 ### `Closeable` and `AutoCloseable`
 
-Only `**Closeable**` or `**AutoCloseable**` objects can be used in the `try` statement.
+Only **`Closeable`** or **`AutoCloseable`** objects can be used in the `try` statement.
 
 Most of the I/O classes we've talked about, including `Stream`, `Reader`, `Writer`, `InputStream`, and `OuptutStream`, already implement the `Closeable` interface, whose `close()` method can throw an `IOException`.
 
