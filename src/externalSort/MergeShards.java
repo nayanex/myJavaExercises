@@ -30,38 +30,43 @@ public final class MergeShards {
         //
         //       In the "finally" part of the try-finally block, make sure to close all the
         //       BufferedReaders.
-        PriorityQueue<WordEntry> priorityQueue = new PriorityQueue<>(inputs.size());
+        PriorityQueue<WordEntry> words = new PriorityQueue<>(inputs.size());
         try{
             for (Path input : inputs) {
-                readers.add(Files.newBufferedReader(input);
+                readers.add(Files.newBufferedReader(input));
             }
             for (BufferedReader reader : readers){
                 String word = reader.readLine();
-                WordEntry wordEntry = new WordEntry(word, reader);
-                priorityQueue.offer(wordEntry);
+                if (word != null) {
+                    words.add(new WordEntry(word, reader));
+                }
+            }
+            try(Writer writer = Files.newBufferedWriter(outputPath)){
+                while(!words.isEmpty()){
+                    WordEntry entry = words.poll();
+                    writer.write(entry.word);
+                    writer.write(System.lineSeparator());
+                    String word = entry.reader.readLine();
+                    if (word != null) {
+                        words.add(new WordEntry(word, entry.reader));
+                    }
+                    words.offer(entry);
+
+                }
             }
         } catch (IOException e){
             e.printStackTrace();
         } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            for (BufferedReader reader : readers) {
+                if(reader != null){
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
-
-        try(BufferedWriter writer = Files.newBufferedWriter(outputPath)){
-            while(!priorityQueue.isEmpty()){
-                WordEntry wordEntry = priorityQueue.poll();
-                writer.write(wordEntry.word);
-                writer.newLine();
-
-            }
-        }
-
-
     }
 
     private static final class WordEntry implements Comparable<WordEntry> {
@@ -80,4 +85,5 @@ public final class MergeShards {
     }
 }
 // javac *.java
-// java MergeShards shards/ sorted.txt
+// java externalSort/MergeShards shards/ sorted.txt
+// java externalSort/MergeShards shards/ sorted.txt
