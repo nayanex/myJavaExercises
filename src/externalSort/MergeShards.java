@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
-import java.util.stream.Collectors;
 
 public final class MergeShards {
     public static void main(String[] args) throws Exception {
@@ -16,7 +15,7 @@ public final class MergeShards {
             return;
         }
 
-        List<Path> inputs = Files.walk(Path.of(args[0]), 1).skip(1).collect(Collectors.toList());
+        List<Path> inputs = Files.walk(Path.of(args[0]), 1).skip(1).toList();
         List<BufferedReader> readers = new ArrayList<>(inputs.size());
         Path outputPath = Path.of(args[1]);
 
@@ -30,8 +29,9 @@ public final class MergeShards {
         //
         //       In the "finally" part of the try-finally block, make sure to close all the
         //       BufferedReaders.
-        PriorityQueue<WordEntry> words = new PriorityQueue<>(inputs.size());
+
         try{
+            PriorityQueue<WordEntry> words = new PriorityQueue<>(inputs.size());
             for (Path input : inputs) {
                 readers.add(Files.newBufferedReader(input));
             }
@@ -50,20 +50,16 @@ public final class MergeShards {
                     if (word != null) {
                         words.add(new WordEntry(word, entry.reader));
                     }
-                    words.offer(entry);
-
                 }
             }
         } catch (IOException e){
             e.printStackTrace();
         } finally {
             for (BufferedReader reader : readers) {
-                if(reader != null){
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
