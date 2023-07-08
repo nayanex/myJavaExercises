@@ -301,4 +301,30 @@ AutoCloseable.close() does not throw IOException.
 
 `Closeable` and `AutoCloseable` are just regular Java interfaces, which means you can write your own implmentations and then use them in a `try-with-resources` block!
 
+## Java Object Serialization
+
+Here's a really bare-bones example demonstrating the basic procedure to serialize and deserialize a Java object:
+
+```java
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+public final class Main {
+    public static void main(String[] args) throws Exception {
+        Path path = Path.of("list.bin");
+        try (var out = new ObjectOutputStream(Files.newOutputStream(path))) {
+            out.writeObject(List.of("Hello", " ", "World!"));
+        }
+        try (var in = new ObjectInputStream(Files.newInputStream(path))) {
+            List < String > deserialized = (List<String>) in .readObject();
+            System.out.println(deserialized);
+        }
+    }
+}
+```
+
+
 
